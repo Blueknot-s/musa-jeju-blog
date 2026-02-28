@@ -1,0 +1,5 @@
+{
+  "name": "musa Jeju Blog",
+  "description": "A minimal, responsive blog for Jeju Island featuring travel, food, and daily life, powered by Next.js 14 and WordPress GraphQL.",
+  "requestFramePermissions": []
+}
