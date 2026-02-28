@@ -50,7 +50,7 @@ export default function AdSense({ type }: AdSenseProps) {
       <ins
         ref={adRef}
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ display: 'block', minHeight: '0' }}
         data-ad-client="ca-pub-1665608758033551"
         data-ad-slot={config.slot}
         data-ad-format={config.format}
