@@ -1,20 +1,12 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface AdSenseProps {
   type: 'top' | 'middle' | 'bottom' | 'infeed' | 'inarticle' | 'multiplex';
 }
 
-interface AdConfigItem {
-  slot: string;
-  format: string;
-  fullWidth?: boolean;
-  layoutKey?: string;
-  layout?: string;
-}
-
-const adConfig: Record<AdSenseProps['type'], AdConfigItem> = {
+const adConfig: Record<string, any> = {
   top: { slot: '3745613123', format: 'auto', fullWidth: true },
   middle: { slot: '1891438265', format: 'auto', fullWidth: true },
   bottom: { slot: '6952193250', format: 'auto', fullWidth: true },
@@ -26,39 +18,53 @@ const adConfig: Record<AdSenseProps['type'], AdConfigItem> = {
 export default function AdSense({ type }: AdSenseProps) {
   const adRef = useRef<HTMLModElement>(null);
   const isLoaded = useRef(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    // 광고 승인 전에는 숨김 처리
+    const timer = setTimeout(() => {
+      if (adRef.current) {
+        const height = adRef.current.offsetHeight;
+        if (height === 0) {
+          setIsVisible(false);
+        }
+      }
+    }, 2000);
+
     if (isLoaded.current) return;
-    if (!adRef.current) return;
-    
-    const hasAd = adRef.current.getAttribute('data-adsbygoogle-status');
-    if (hasAd) return;
+    isLoaded.current = true;
 
     try {
-      isLoaded.current = true;
       ((window as any).adsbygoogle = 
         (window as any).adsbygoogle || []).push({});
     } catch (err) {
       console.error('AdSense error:', err);
     }
+
+    return () => clearTimeout(timer);
   }, []);
 
   const config = adConfig[type];
 
+  // 광고 미승인 상태면 완전히 숨김
+  if (!isVisible) return null;
+
   return (
-    <div className="overflow-hidden text-center min-h-0">
+    <div className="overflow-hidden text-center">
       <ins
         ref={adRef}
         className="adsbygoogle"
-        style={{ display: 'block', minHeight: '0' }}
+        style={{ display: 'block', minHeight: 0 }}
         data-ad-client="ca-pub-1665608758033551"
         data-ad-slot={config.slot}
         data-ad-format={config.format}
-        {...(config.fullWidth && { 'data-full-width-responsive': 'true' })}
-        {...('layoutKey' in config && { 
+        {...(config.fullWidth && { 
+          'data-full-width-responsive': 'true' 
+        })}
+        {...(config.layoutKey && { 
           'data-ad-layout-key': config.layoutKey 
         })}
-        {...('layout' in config && { 
+        {...(config.layout && { 
           'data-ad-layout': config.layout 
         })}
       />
