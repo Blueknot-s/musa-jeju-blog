@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR, Playfair_Display } from "next/font/google";
-import Script from "next/script";
+import { Inter, Playfair_Display, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Script from "next/script";
 
-const notoSansKr = Noto_Sans_KR({ 
-  subsets: ["latin"], 
-  weight: ["100", "300", "400", "500", "700", "900"],
-  variable: "--font-noto-sans-kr",
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
+const notoSansKr = Noto_Sans_KR({ subsets: ["latin"], weight: ["100", "300", "400", "500", "700", "900"], variable: "--font-noto-sans-kr" });
 
 export const metadata: Metadata = {
   title: {
@@ -27,16 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} ${playfair.variable}`}>
-      <head>
+    <html lang="ko" className={`${inter.variable} ${playfair.variable} ${notoSansKr.variable}`}>
+      <body className="flex min-h-screen flex-col font-sans antialiased bg-white text-gray-900">
         <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1665608758033551"
-          crossOrigin="anonymous"
+          id="adsbygoogle-init"
           strategy="afterInteractive"
+          crossOrigin="anonymous"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1665608758033551"
         />
-      </head>
-      <body className="flex min-h-screen flex-col font-sans antialiased bg-white text-jeju-dark">
         <Header />
         <main className="flex-1">
           {children}

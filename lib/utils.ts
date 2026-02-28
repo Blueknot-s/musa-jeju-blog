@@ -21,6 +21,27 @@ export const CATEGORY_MAP: Record<string, string> = {
   'jeju-news': '제주뉴스',
 };
 
+export const CATEGORY_IMAGE_MAP: Record<string, string> = {
+  'restaurants-cafes': '/category-food.webp',
+  'travel': '/category-travel.webp',
+  'accommodation': '/category-hotel.webp',
+  'daily-life': '/category-life.webp',
+  'jeju-news': '/category-news.webp',
+  // Map English names too just in case
+  'Adventure place': '/category-travel.webp',
+  'Road Trip': '/category-travel.webp',
+  'Restaurants': '/category-food.webp',
+  'Cafes': '/category-food.webp',
+  'Accommodation': '/category-hotel.webp',
+  'Hotels': '/category-hotel.webp',
+  'Daily Life': '/category-life.webp',
+  'Jeju News': '/category-news.webp',
+};
+
+export function getCategoryImage(category: string): string {
+  return CATEGORY_IMAGE_MAP[category] || '/hero.webp';
+}
+
 export function translateCategory(category: string): string {
   return CATEGORY_MAP[category] || category;
 }

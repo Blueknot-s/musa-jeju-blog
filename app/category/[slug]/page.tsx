@@ -1,5 +1,6 @@
 import { getPostsByCategory } from '@/lib/api';
 import PostCard from '@/components/PostCard';
+import AdSense from '@/components/AdSense';
 import { notFound } from 'next/navigation';
 import { translateCategory } from '@/lib/utils';
 
@@ -34,8 +35,15 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
       {posts && posts.length > 0 ? (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post: any) => (
-            <PostCard key={post.slug} post={post} />
+          {posts.map((post: any, index: number) => (
+            <>
+              <PostCard key={post.slug} post={post} />
+              {(index + 1) % 3 === 0 && index !== posts.length - 1 && (
+                <div className="col-span-full py-8">
+                  <AdSense type="infeed" />
+                </div>
+              )}
+            </>
           ))}
         </div>
       ) : (
@@ -43,6 +51,11 @@ export default async function CategoryPage({ params }: { params: { slug: string 
           <p className="text-gray-500">게시글이 없습니다.</p>
         </div>
       )}
+
+      {/* AdSense Page Bottom */}
+      <div className="mt-12">
+        <AdSense type="multiplex" />
+      </div>
     </div>
   );
 }

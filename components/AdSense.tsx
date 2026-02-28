@@ -2,56 +2,65 @@
 
 import { useEffect, useRef } from 'react';
 
-type AdType = 'top' | 'middle' | 'bottom' | 'infeed' | 'inarticle' | 'multiplex';
-
 interface AdSenseProps {
-  type: AdType;
-  className?: string;
+  type: 'top' | 'middle' | 'bottom' | 'infeed' | 'inarticle' | 'multiplex';
 }
 
-const AD_UNITS: Record<AdType, { slot: string; layoutKey?: string; format?: string }> = {
-  top: { slot: '3745613123', format: 'auto' },
-  middle: { slot: '1891438265', format: 'auto' },
-  bottom: { slot: '6952193250', format: 'auto' },
-  infeed: { slot: '1488846338', layoutKey: '-fb+5w+4e-db+86', format: 'fluid' },
-  inarticle: { slot: '7502901983', layoutKey: '-fg+5n+6t-e7+r', format: 'fluid' }, // Note: layoutKey for inarticle is usually standard or not needed if format is fluid, but user didn't provide one. Standard in-article usually doesn't need layout-key unless specified. I will assume standard in-article behavior.
+interface AdConfigItem {
+  slot: string;
+  format: string;
+  fullWidth?: boolean;
+  layoutKey?: string;
+  layout?: string;
+}
+
+const adConfig: Record<AdSenseProps['type'], AdConfigItem> = {
+  top: { slot: '3745613123', format: 'auto', fullWidth: true },
+  middle: { slot: '1891438265', format: 'auto', fullWidth: true },
+  bottom: { slot: '6952193250', format: 'auto', fullWidth: true },
+  infeed: { slot: '1488846338', format: 'fluid', layoutKey: '-fb+5w+4e-db+86' },
+  inarticle: { slot: '7502901983', format: 'fluid', layout: 'in-article' },
   multiplex: { slot: '4685166950', format: 'autorelaxed' },
 };
 
-// User provided layout-key for infeed only. 
-// For inarticle, standard behavior is usually sufficient.
-
-export default function AdSense({ type, className = '' }: AdSenseProps) {
+export default function AdSense({ type }: AdSenseProps) {
   const adRef = useRef<HTMLModElement>(null);
+  const isLoaded = useRef(false);
 
   useEffect(() => {
+    if (isLoaded.current) return;
+    if (!adRef.current) return;
+    
+    const hasAd = adRef.current.getAttribute('data-adsbygoogle-status');
+    if (hasAd) return;
+
     try {
-      if (typeof window !== 'undefined') {
-        const adsbygoogle = (window as any).adsbygoogle || [];
-        // Check if the ad slot is already filled to prevent duplicate push
-        if (adRef.current && adRef.current.innerHTML === '') {
-             adsbygoogle.push({});
-        }
-      }
+      isLoaded.current = true;
+      ((window as any).adsbygoogle = 
+        (window as any).adsbygoogle || []).push({});
     } catch (err) {
       console.error('AdSense error:', err);
     }
   }, []);
 
-  const unit = AD_UNITS[type];
+  const config = adConfig[type];
 
   return (
-    <div className={`adsense-container my-8 flex justify-center overflow-hidden ${className}`}>
+    <div className="overflow-hidden text-center min-h-0">
       <ins
         ref={adRef}
         className="adsbygoogle"
-        style={{ display: 'block', minWidth: '250px', width: '100%' }}
+        style={{ display: 'block' }}
         data-ad-client="ca-pub-1665608758033551"
-        data-ad-slot={unit.slot}
-        data-ad-format={unit.format}
-        data-full-width-responsive="true"
-        {...(unit.layoutKey ? { 'data-ad-layout-key': unit.layoutKey } : {})}
-        {...(type === 'inarticle' ? { 'data-ad-layout': 'in-article' } : {})}
+        data-ad-slot={config.slot}
+        data-ad-format={config.format}
+        {...(config.fullWidth && { 'data-full-width-responsive': 'true' })}
+        {...('layoutKey' in config && { 
+          'data-ad-layout-key': config.layoutKey 
+        })}
+        {...('layout' in config && { 
+          'data-ad-layout': config.layout 
+        })}
       />
     </div>
   );

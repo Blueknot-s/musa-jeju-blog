@@ -20,14 +20,13 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex flex-col items-start leading-none group relative">
-          <span className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-jeju-dark group-hover:text-jeju-orange transition-colors">
+        <Link href="/" className="flex flex-col items-start leading-none group">
+          <span className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-black group-hover:text-[#FF6B35] transition-colors">
             musa Jeju
           </span>
-          <span className="text-xs font-medium text-gray-500 tracking-widest group-hover:text-jeju-orange transition-colors mt-1">
+          <span className="text-xs font-medium text-gray-500 tracking-widest group-hover:text-[#FF6B35] transition-colors mt-1">
             무사마씸 제주
           </span>
-          <span className="absolute -bottom-2 left-0 w-8 h-1 bg-jeju-orange rounded-full group-hover:w-full transition-all duration-300"></span>
         </Link>
 
         {/* Desktop Nav */}
@@ -36,7 +35,7 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-bold text-gray-600 hover:text-jeju-orange transition-colors"
+              className="text-sm font-medium text-gray-600 hover:text-[#FF6B35] transition-colors"
             >
               {item.label}
             </Link>
@@ -60,7 +59,7 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-gray-600 hover:text-black py-2"
+                className="text-sm font-medium text-gray-600 hover:text-[#FF6B35] py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
