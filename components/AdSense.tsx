@@ -18,15 +18,15 @@ const adConfig: Record<string, any> = {
 export default function AdSense({ type }: AdSenseProps) {
   const adRef = useRef<HTMLModElement>(null);
   const isLoaded = useRef(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     // 광고 승인 전에는 숨김 처리
     const timer = setTimeout(() => {
       if (adRef.current) {
         const height = adRef.current.offsetHeight;
-        if (height > 0) {
-          setIsVisible(true);
+        if (height === 0) {
+          setIsVisible(false);
         }
       }
     }, 2000);
