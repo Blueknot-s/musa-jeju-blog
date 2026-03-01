@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   description: "제주의 아름다운 풍경, 맛있는 음식, 그리고 소소한 일상을 기록하는 블로그입니다.",
   keywords: ["제주", "제주도", "제주여행", "제주맛집", "제주카페", "제주일상"],
 };
+// 🔥 여기 추가
+  verification: {
+    other: {
+      "naver-site-verification": "8f69134d6df312a6c49c7966d913ddd06926ca39",
+    },
 
 export default function RootLayout({
   children,
