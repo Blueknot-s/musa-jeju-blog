@@ -18,10 +18,7 @@ export const metadata: Metadata = {
   keywords: ["제주", "제주도", "제주여행", "제주맛집", "제주카페", "제주일상"],
 };
 // 🔥 여기 추가
-  verification: {
-    other: {
-      "naver-site-verification": "8f69134d6df312a6c49c7966d913ddd06926ca39",
-    },
+  <meta name="naver-site-verification" content="8f69134d6df312a6c49c7966d913ddd06926ca39" />
 
 export default function RootLayout({
   children,
