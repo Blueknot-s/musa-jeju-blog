@@ -5,12 +5,20 @@ import { ko } from 'date-fns/locale';
 import he from 'he';
 import { translateCategory } from '@/lib/utils';
 
+// ✅ 추가: 본문 첫 번째 이미지 추출 함수
+function getFirstImage(content?: string): string | null {
+  if (!content) return null;
+  const match = content.match(/<img[^>]+src=["']([^"']+)["']/);
+  return match ? match[1] : null;
+}
+
 interface PostProps {
   post: {
     title: string;
     excerpt: string;
     slug: string;
     date: string;
+    content?: string; // ✅ 추가
     featuredImage?: {
       node: {
         sourceUrl: string;
@@ -36,7 +44,12 @@ interface PostProps {
 
 export default function PostCard({ post }: PostProps) {
   const category = post.categories?.nodes[0];
-  const imageUrl = post.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1548115184-bc6544d06a58?q=80&w=800&auto=format&fit=crop';
+  
+  // ✅ 수정: 3단계 이미지 우선순위
+  const imageUrl = 
+    post.featuredImage?.node?.sourceUrl ||
+    getFirstImage(post.content) ||
+    'https://images.unsplash.com/photo-1548115184-bc6544d06a58?q=80&w=800&auto=format&fit=crop';
 
   return (
     <Link href={`/${post.slug}`} className="group flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
