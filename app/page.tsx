@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getAllPosts } from '@/lib/api';
 import PostCard from '@/components/PostCard';
 import AdSense from '@/components/AdSense';
