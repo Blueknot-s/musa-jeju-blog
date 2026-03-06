@@ -43,11 +43,13 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* AdSense Below Hero */}
-      <div className="container mx-auto px-4 min-h-0">
-        <AdSense type="top" />
-      </div>
-
+     {/* AdSense Below Hero - 글 있을 때만 */}
+      {posts && posts.length > 0 && (
+        <div className="container mx-auto px-4 min-h-0">
+          <AdSense type="top" />
+        </div>
+      )}
+ 
       {/* Categories */}
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
