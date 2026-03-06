@@ -1,5 +1,14 @@
 const WP_API = 'https://steelblue-seal-184760.hostingersite.com/wp-json/wp/v2';
 
+// ✅ 인증 헤더
+function getAuthHeaders(): Record<string, string> {
+  const username = process.env.WP_USERNAME;
+  const password = process.env.WP_APP_PASSWORD;
+  if (!username || !password) return {};
+  const credentials = Buffer.from(`${username}:${password}`).toString('base64');
+  return { Authorization: `Basic ${credentials}` };
+}
+
 interface WPPost {
   id: number;
   slug: string;
@@ -44,7 +53,10 @@ export async function getAllPosts(first = 20) {
   try {
     const res = await fetch(
       `${WP_API}/posts?per_page=${first}&orderby=date&order=desc&_embed`,
-      { next: { revalidate: 10 } }
+      {
+        next: { revalidate: 10 },
+        headers: getAuthHeaders(),
+      }
     );
     if (!res.ok) return [];
     const posts: WPPost[] = await res.json();
@@ -60,7 +72,10 @@ export async function getPostBySlug(slug: string) {
     const decodedSlug = decodeURIComponent(slug);
     const res = await fetch(
       `${WP_API}/posts?slug=${encodeURIComponent(decodedSlug)}&_embed`,
-      { next: { revalidate: 10 } }
+      {
+        next: { revalidate: 10 },
+        headers: getAuthHeaders(),
+      }
     );
     if (!res.ok) return null;
     const posts: WPPost[] = await res.json();
@@ -76,7 +91,10 @@ export async function getPostsByCategory(categoryName: string, first = 20) {
   try {
     const catRes = await fetch(
       `${WP_API}/categories?slug=${encodeURIComponent(categoryName)}&per_page=1`,
-      { next: { revalidate: 60 } }
+      {
+        next: { revalidate: 60 },
+        headers: getAuthHeaders(),
+      }
     );
     if (!catRes.ok) return [];
     const cats = await catRes.json();
@@ -85,7 +103,10 @@ export async function getPostsByCategory(categoryName: string, first = 20) {
     const categoryId = cats[0].id;
     const res = await fetch(
       `${WP_API}/posts?categories=${categoryId}&per_page=${first}&orderby=date&order=desc&_embed`,
-      { next: { revalidate: 10 } }
+      {
+        next: { revalidate: 10 },
+        headers: getAuthHeaders(),
+      }
     );
     if (!res.ok) return [];
     const posts: WPPost[] = await res.json();
@@ -100,7 +121,10 @@ export async function getAllCategories() {
   try {
     const res = await fetch(
       `${WP_API}/categories?per_page=100&hide_empty=true`,
-      { next: { revalidate: 60 } }
+      {
+        next: { revalidate: 60 },
+        headers: getAuthHeaders(),
+      }
     );
     if (!res.ok) return [];
     const cats = await res.json();
