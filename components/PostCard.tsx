@@ -5,7 +5,6 @@ import { ko } from 'date-fns/locale';
 import he from 'he';
 import { translateCategory } from '@/lib/utils';
 
-// ✅ 추가: 본문 첫 번째 이미지 추출 함수
 function getFirstImage(content?: string): string | null {
   if (!content) return null;
   const match = content.match(/<img[^>]+src=["']([^"']+)["']/);
@@ -18,7 +17,7 @@ interface PostProps {
     excerpt: string;
     slug: string;
     date: string;
-    content?: string; // ✅ 추가
+    content?: string;
     featuredImage?: {
       node: {
         sourceUrl: string;
@@ -45,7 +44,6 @@ interface PostProps {
 export default function PostCard({ post }: PostProps) {
   const category = post.categories?.nodes[0];
   
-  // ✅ 수정: 3단계 이미지 우선순위
   const imageUrl = 
     post.featuredImage?.node?.sourceUrl ||
     getFirstImage(post.content) ||
@@ -58,7 +56,7 @@ export default function PostCard({ post }: PostProps) {
           src={imageUrl}
           alt={post.featuredImage?.node?.altText || post.title}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover object-center transition-transform duration-300 group-hover:scale-105" // ✅ object-center 추가
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         {category && (
