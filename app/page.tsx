@@ -115,12 +115,7 @@ export default async function Home() {
           <AdSense type="multiplex" />
         </div>
       )}
-      {posts && posts.length >= 6 && (
-        <div className="container mx-auto px-4 py-8">
-          <AdSense type="multiplex" />
-        </div>
-      )}
-
+      
     </div>  {/* ← 이 닫는 태그 있어야 해요 (flex flex-col min-h-screen) */}
   );
 }
