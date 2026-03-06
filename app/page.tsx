@@ -107,10 +107,9 @@ export default async function Home() {
         )}
       </div>
 
-      {/* AdSense Page Bottom */}
-      <div className="container mx-auto px-4 py-8">
-        <AdSense type="multiplex" />
-      </div>
-    </div>
-  );
-}
+     {/* AdSense Page Bottom - 글 충분할 때만 활성화 */}
+      {posts && posts.length >= 6 && (
+        <div className="container mx-auto px-4 py-8">
+          <AdSense type="multiplex" />
+        </div>
+      )}
