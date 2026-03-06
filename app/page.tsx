@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section 
+      <section
         className="relative h-[500px] w-full"
         style={{
           backgroundImage: "url('https://raw.githubusercontent.com/Blueknot-s/musa-jeju-blog/main/hero.webp')",
@@ -43,13 +43,13 @@ export default async function Home() {
         </div>
       </section>
 
-     {/* AdSense Below Hero - 글 있을 때만 */}
+      {/* AdSense Below Hero - 글 있을 때만 */}
       {posts && posts.length > 0 && (
         <div className="container mx-auto px-4 min-h-0">
           <AdSense type="top" />
         </div>
       )}
- 
+
       {/* Categories */}
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -109,13 +109,12 @@ export default async function Home() {
         )}
       </div>
 
-     {/* AdSense Page Bottom - 글 충분할 때만 활성화 */}
+      {/* AdSense Page Bottom - 글 6개 이상일 때만 */}
       {posts && posts.length >= 6 && (
         <div className="container mx-auto px-4 py-8">
           <AdSense type="multiplex" />
         </div>
       )}
-      
-    </div>  {/* ← 이 닫는 태그 있어야 해요 (flex flex-col min-h-screen) */}
+    </div>
   );
 }
