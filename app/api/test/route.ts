@@ -18,12 +18,4 @@ export async function GET() {
     return Response.json({ error: String(error) }, { status: 500 });
   }
 }
-```
 
-5. **Commit changes**
-
----
-
-### 2. 배포 완료 후 접속
-```
-https://musajeju.blue-knot.com/api/test
