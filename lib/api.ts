@@ -26,6 +26,7 @@ export async function getAllPosts(first = 20) {
           excerpt
           slug
           date
+          content
           featuredImage {
             node {
               sourceUrl
@@ -53,7 +54,6 @@ export async function getAllPosts(first = 20) {
     { variables: { first } }
   );
 
-  // ✅ 수정 1: 슬러그 디코딩 (한글 슬러그 정규화)
   const posts = data?.posts?.nodes;
   if (posts) {
     return posts.map((post: any) => ({
@@ -65,9 +65,7 @@ export async function getAllPosts(first = 20) {
 }
 
 export async function getPostBySlug(slug: string) {
-  // ✅ 수정 2: 받은 슬러그도 디코딩 후 API 요청
   const decodedSlug = decodeURIComponent(slug);
-
   const data = await fetchAPI(
     `
     query PostBySlug($id: ID!, $idType: PostIdType!) {
@@ -115,6 +113,7 @@ export async function getPostsByCategory(categoryName: string, first = 20) {
           excerpt
           slug
           date
+          content
           featuredImage {
             node {
               sourceUrl
