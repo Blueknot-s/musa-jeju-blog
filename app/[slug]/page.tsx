@@ -8,8 +8,14 @@ import type { Metadata } from 'next';
 import { translateCategory } from '@/lib/utils';
 import AdSense from '@/components/AdSense';
 
+// ✅ 추가: 본문 첫 번째 이미지 추출 함수
+function getFirstImage(content?: string): string | null {
+  if (!content) return null;
+  const match = content.match(/<img[^>]+src=["']([^"']+)["']/);
+  return match ? match[1] : null;
+}
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  // ✅ 수정: 슬러그 디코딩
   const slug = decodeURIComponent(params.slug);
   const post = await getPostBySlug(slug);
   if (!post) return {};
@@ -20,7 +26,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  // ✅ 수정: 슬러그 디코딩
   const slug = decodeURIComponent(params.slug);
   const post = await getPostBySlug(slug);
 
@@ -28,7 +33,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
     notFound();
   }
 
-  const imageUrl = post.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1548115184-bc6544d06a58?q=80&w=1200&auto=format&fit=crop';
+  // ✅ 수정: 3단계 우선순위
+  const imageUrl =
+    post.featuredImage?.node?.sourceUrl ||
+    getFirstImage(post.content) ||
+    'https://images.unsplash.com/photo-1548115184-bc6544d06a58?q=80&w=1200&auto=format&fit=crop';
 
   return (
     <article className="container mx-auto px-4 py-12 md:px-6 lg:py-16 max-w-4xl">
