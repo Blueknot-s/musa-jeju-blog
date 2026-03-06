@@ -9,9 +9,10 @@ import { translateCategory } from '@/lib/utils';
 import AdSense from '@/components/AdSense';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  // ✅ 수정: 슬러그 디코딩
+  const slug = decodeURIComponent(params.slug);
+  const post = await getPostBySlug(slug);
   if (!post) return {};
-
   return {
     title: he.decode(post.title),
     description: he.decode(post.excerpt.replace(/<[^>]*>?/gm, '')).slice(0, 160),
@@ -19,7 +20,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = await getPostBySlug(params.slug);
+  // ✅ 수정: 슬러그 디코딩
+  const slug = decodeURIComponent(params.slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
