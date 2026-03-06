@@ -6,9 +6,8 @@ async function fetchAPI(query: string, { variables }: { variables?: any } = {}) 
     method: 'POST',
     headers,
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 }, // Revalidate every 60 seconds
+    next: { revalidate: 60 },
   });
-
   const json = await res.json();
   if (json.errors) {
     console.error(json.errors);
@@ -53,10 +52,22 @@ export async function getAllPosts(first = 20) {
   `,
     { variables: { first } }
   );
-  return data?.posts?.nodes;
+
+  // ✅ 수정 1: 슬러그 디코딩 (한글 슬러그 정규화)
+  const posts = data?.posts?.nodes;
+  if (posts) {
+    return posts.map((post: any) => ({
+      ...post,
+      slug: decodeURIComponent(post.slug),
+    }));
+  }
+  return posts;
 }
 
 export async function getPostBySlug(slug: string) {
+  // ✅ 수정 2: 받은 슬러그도 디코딩 후 API 요청
+  const decodedSlug = decodeURIComponent(slug);
+
   const data = await fetchAPI(
     `
     query PostBySlug($id: ID!, $idType: PostIdType!) {
@@ -89,7 +100,7 @@ export async function getPostBySlug(slug: string) {
       }
     }
   `,
-    { variables: { id: slug, idType: 'SLUG' } }
+    { variables: { id: decodedSlug, idType: 'SLUG' } }
   );
   return data?.post;
 }
@@ -134,18 +145,18 @@ export async function getPostsByCategory(categoryName: string, first = 20) {
 }
 
 export async function getAllCategories() {
-    const data = await fetchAPI(
-        `
-        query AllCategories {
-            categories {
-                nodes {
-                    name
-                    slug
-                    count
-                }
-            }
+  const data = await fetchAPI(
+    `
+    query AllCategories {
+      categories {
+        nodes {
+          name
+          slug
+          count
         }
-        `
-    );
-    return data?.categories?.nodes;
+      }
+    }
+    `
+  );
+  return data?.categories?.nodes;
 }
