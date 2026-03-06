@@ -6,7 +6,7 @@ async function fetchAPI(query: string, { variables }: { variables?: any } = {}) 
     method: 'POST',
     headers,
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 },
+    next: { revalidate: 10 },
   });
   const json = await res.json();
   if (json.errors) {
